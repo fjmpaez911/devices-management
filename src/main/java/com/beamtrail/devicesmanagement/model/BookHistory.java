@@ -2,6 +2,7 @@ package com.beamtrail.devicesmanagement.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,8 +39,8 @@ public class BookHistory implements Serializable {
     @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "booked_timestamp")
-    private Timestamp bookedTimestamp;
+    @Column(name = "booked_timestamp", insertable = true, updatable = false)
+    private Timestamp bookedTimestamp = new Timestamp(new Date().getTime());
 
     @Column(name = "returned_timestamp")
     private Timestamp returnedTimestamp;

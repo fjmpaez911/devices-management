@@ -141,7 +141,8 @@ public class DeviceModelServiceImpl implements DeviceModelService {
 
             bhRepository.findTop5ByDeviceIdOrderByBookedTimestampDesc(device.getId()).stream()
                     .forEach(item -> bhEntries
-                            .add(new BookHistoryEntry(item.getId(), item.getUserName())));
+                            .add(new BookHistoryEntry(item.getId(), item.getUserName(),
+                                    item.getBookedTimestamp(), item.getReturnedTimestamp())));
 
             response = DeviceBookedResponse.builder().id(device.getId()).name(device.getName())
                     .brand(device.getBrand()).model(device.getModel()).booked(device.isBooked())
