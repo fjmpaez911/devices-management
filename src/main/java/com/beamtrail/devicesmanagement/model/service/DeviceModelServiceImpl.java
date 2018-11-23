@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.SpanAccessor;
 import org.springframework.stereotype.Service;
 
+import com.beamtrail.devicesmanagement.exception.DefinedErrorException;
+import com.beamtrail.devicesmanagement.exception.ErrorEnum;
 import com.beamtrail.devicesmanagement.model.BookHistory;
 import com.beamtrail.devicesmanagement.model.Device;
 import com.beamtrail.devicesmanagement.model.repo.BookHistoryRepository;
@@ -92,6 +94,8 @@ public class DeviceModelServiceImpl implements DeviceModelService {
                 deviceRepository.save(device);
 
                 log.debug("device {} successfully booked", deviceId);
+            } else {
+                throw new DefinedErrorException(ErrorEnum.ALREADY_BOOKED);
             }
         });
 
@@ -105,17 +109,19 @@ public class DeviceModelServiceImpl implements DeviceModelService {
 
         deviceRepository.findById(deviceId).ifPresent(device -> {
 
-            bhRepository.findByDeviceIdAndReturnedTimestampIsNull(device.getId())
-                    .ifPresent(item -> {
+            BookHistory bookHistory = bhRepository
+                    .findByDeviceIdAndUserNameIgnoreCaseAndReturnedTimestampIsNull(device.getId(),
+                            userName)
+                    .orElseThrow(() -> new DefinedErrorException(ErrorEnum.ALREADY_RETURNED));
 
-                        item.setReturnedTimestamp(new Timestamp(new Date().getTime()));
-                        bhRepository.save(item);
+            bookHistory.setReturnedTimestamp(new Timestamp(new Date().getTime()));
+            bhRepository.save(bookHistory);
 
-                        device.setBooked(false);
-                        deviceRepository.save(device);
+            device.setBooked(false);
+            deviceRepository.save(device);
 
-                        log.debug("device {} successfully returned", deviceId);
-                    });
+            log.debug("device {} successfully returned", deviceId);
+
         });
 
         return Optional.ofNullable(buildDeviceBookedResponse(deviceId));
@@ -135,8 +141,7 @@ public class DeviceModelServiceImpl implements DeviceModelService {
 
             bhRepository.findTop5ByDeviceIdOrderByBookedTimestampDesc(device.getId()).stream()
                     .forEach(item -> bhEntries
-                            .add(new BookHistoryEntry(item.getId(), item.getUserName(),
-                                    item.getBookedTimestamp(), item.getReturnedTimestamp())));
+                            .add(new BookHistoryEntry(item.getId(), item.getUserName())));
 
             response = DeviceBookedResponse.builder().id(device.getId()).name(device.getName())
                     .brand(device.getBrand()).model(device.getModel()).booked(device.isBooked())

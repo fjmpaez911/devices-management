@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS book_history (
     device_id INT UNSIGNED NOT NULL,
     user_name VARCHAR(64) NOT NULL,
     booked_timestamp TIMESTAMP NOT NULL DEFAULT now(),
-    returned_timestamp TIMESTAMP NOT NULL DEFAULT now(),
+    returned_timestamp TIMESTAMP NULL,
   PRIMARY KEY (id),
   KEY device_id_index (device_id),
   KEY user_name_index (user_name)

@@ -15,6 +15,7 @@ public interface BookHistoryRepository extends CrudRepository<BookHistory, Long>
 
     List<BookHistory> findTop5ByDeviceIdOrderByBookedTimestampDesc(Long deviceId);
 
-    Optional<BookHistory> findByDeviceIdAndReturnedTimestampIsNull(Long deviceId);
+    Optional<BookHistory> findByDeviceIdAndUserNameIgnoreCaseAndReturnedTimestampIsNull(
+            Long deviceId, String userName);
 
 }
