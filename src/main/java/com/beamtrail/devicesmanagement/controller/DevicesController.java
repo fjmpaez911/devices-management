@@ -17,6 +17,8 @@ import com.beamtrail.devicesmanagement.model.service.DeviceModelService;
 import com.beamtrail.devicesmanagement.pojo.DeviceBookedRequest;
 import com.beamtrail.devicesmanagement.pojo.DeviceBookedResponse;
 import com.beamtrail.devicesmanagement.pojo.GetDeviceResponse;
+import com.beamtrail.devicesmanagement.pojo.GetDevicesResponse;
+import com.beamtrail.devicesmanagement.service.DevicesService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,18 +30,25 @@ public class DevicesController {
     @Autowired
     private DeviceModelService deviceModelService;
 
-    @GetMapping(path = "")
-    public GetDeviceResponse getDevices() {
+    @Autowired
+    private DevicesService devicesService;
 
-        // TODO
-        return null;
+    @GetMapping(path = "")
+    public GetDevicesResponse getDevices() {
+
+        log.info("received request to get devices");
+
+        return devicesService.getDevices();
     }
 
     @GetMapping(path = "/{device_id}")
     public GetDeviceResponse getDevice(@NotBlank @PathVariable("device_id") Long deviceId) {
 
-        // TODO
-        return null;
+        log.info("received request to get device {}", deviceId);
+
+        Optional<GetDeviceResponse> optionalResponse = devicesService.getDevice(deviceId);
+
+        return optionalResponse.orElseThrow(() -> new DefinedErrorException(ErrorEnum.NOT_FOUND));
     }
 
     @PostMapping(path = "/{device_id}/book")
