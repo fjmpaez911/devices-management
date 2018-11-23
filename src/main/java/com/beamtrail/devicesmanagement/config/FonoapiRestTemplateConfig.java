@@ -22,9 +22,9 @@ import org.springframework.web.client.RestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Configuration("fonoapiRestTemplate")
+@Configuration
 @EnableConfigurationProperties(FonoapiConfiguration.class)
-public class FonoapiRestTemplate {
+public class FonoapiRestTemplateConfig {
 
     @Autowired
     private FonoapiConfiguration config;
