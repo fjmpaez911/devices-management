@@ -13,6 +13,8 @@ public interface BookHistoryRepository extends CrudRepository<BookHistory, Long>
 
     Optional<BookHistory> findById(Long id);
 
+    Optional<BookHistory> findTop1ByDeviceIdOrderByBookedTimestampDesc(Long deviceId);
+
     List<BookHistory> findTop5ByDeviceIdOrderByBookedTimestampDesc(Long deviceId);
 
     Optional<BookHistory> findByDeviceIdAndUserNameIgnoreCaseAndReturnedTimestampIsNull(

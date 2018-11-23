@@ -3,6 +3,7 @@ package com.beamtrail.devicesmanagement.model.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.beamtrail.devicesmanagement.model.BookHistory;
 import com.beamtrail.devicesmanagement.model.Device;
 import com.beamtrail.devicesmanagement.pojo.DeviceBookedResponse;
 
@@ -19,4 +20,6 @@ public interface DeviceModelService {
     Optional<DeviceBookedResponse> bookDevice(Long deviceId, String userName);
 
     Optional<DeviceBookedResponse> returnDevice(Long deviceId, String userName);
+
+    Optional<BookHistory> findLastBooking(Long deviceId);
 }

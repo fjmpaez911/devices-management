@@ -127,6 +127,12 @@ public class DeviceModelServiceImpl implements DeviceModelService {
         return Optional.ofNullable(buildDeviceBookedResponse(deviceId));
     }
 
+    @Override
+    public Optional<BookHistory> findLastBooking(Long deviceId) {
+
+        return bhRepository.findTop1ByDeviceIdOrderByBookedTimestampDesc(deviceId);
+    }
+
     private DeviceBookedResponse buildDeviceBookedResponse(Long deviceId) {
 
         DeviceBookedResponse response = null;
