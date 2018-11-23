@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import com.beamtrail.devicesmanagement.exception.ErrorEnum;
 import com.beamtrail.devicesmanagement.model.service.DeviceModelService;
 import com.beamtrail.devicesmanagement.pojo.DeviceBookedRequest;
 import com.beamtrail.devicesmanagement.pojo.DeviceBookedResponse;
+import com.beamtrail.devicesmanagement.pojo.GetDeviceResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +27,20 @@ public class DevicesController {
 
     @Autowired
     private DeviceModelService deviceModelService;
+
+    @GetMapping(path = "")
+    public GetDeviceResponse getDevices() {
+
+        // TODO
+        return null;
+    }
+
+    @GetMapping(path = "/{device_id}")
+    public GetDeviceResponse getDevice(@NotBlank @PathVariable("device_id") Long deviceId) {
+
+        // TODO
+        return null;
+    }
 
     @PostMapping(path = "/{device_id}/book")
     public DeviceBookedResponse bookDevice(@NotBlank @PathVariable("device_id") Long deviceId,
