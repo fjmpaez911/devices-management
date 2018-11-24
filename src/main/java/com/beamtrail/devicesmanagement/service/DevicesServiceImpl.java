@@ -1,5 +1,6 @@
 package com.beamtrail.devicesmanagement.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,12 +35,31 @@ public class DevicesServiceImpl implements DevicesService {
     private FonoapiClient fonoapiClient;
 
     @Override
-    public GetDevicesResponse getDevices() {
+    public GetDevicesResponse getDevices(String isBooked, String brand, String model) {
 
         GetDevicesResponse response = new GetDevicesResponse();
         response.setCorrelationId(spanAccessor.getCurrentSpan().traceIdString());
 
-        deviceModelService.findAllDevices().parallelStream().forEach(device -> {
+        List<Device> devices = null;
+
+        if (StringUtils.isBlank(isBooked) && StringUtils.isBlank(brand)
+                && StringUtils.isBlank(model)) {
+
+            devices = deviceModelService.findAllDevices();
+
+        } else if (StringUtils.isNotBlank(brand) || StringUtils.isNotBlank(model)) {
+
+            devices = deviceModelService.findDevices(brand, model);
+
+            if (StringUtils.isNotBlank(isBooked)) {
+                devices.retainAll(deviceModelService.findDevices(Boolean.parseBoolean(isBooked)));
+            }
+
+        } else {
+            devices = deviceModelService.findDevices(Boolean.parseBoolean(isBooked));
+        }
+
+        devices.parallelStream().forEach(device -> {
 
             FonoapiDevice fonoapiDevice = getFonoapiDevice(device);
 

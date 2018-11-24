@@ -3,10 +3,8 @@ package com.beamtrail.devicesmanagement.model.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,24 +44,29 @@ public class DeviceModelServiceImpl implements DeviceModelService {
     @Override
     public List<Device> findDevices(String brand, String model) {
 
-        List<Device> result = new ArrayList<>();
-        Set<Device> devices = new HashSet<>();
+        List<Device> devices = new ArrayList<>();
 
-        if (StringUtils.isNotBlank(brand)) {
-            log.debug("searching by brand: {}", brand);
-            devices.addAll(deviceRepository.findByBrandIgnoreCase(brand.trim()));
+        if (StringUtils.isBlank(brand)) {
+
+            if (StringUtils.isNotBlank(model)) {
+                log.debug("searching by model: {}", model);
+                devices.addAll(deviceRepository.findByModelIgnoreCase(model.trim()));
+            }
+
+        } else {
+
+            if (StringUtils.isNotBlank(brand)) {
+                log.debug("searching by brand: {}", brand);
+                devices.addAll(deviceRepository.findByBrandIgnoreCase(brand.trim()));
+            }
+
+            if (StringUtils.isNotBlank(model)) {
+                log.debug("searching by model: {}", model);
+                devices.retainAll(deviceRepository.findByModelIgnoreCase(model.trim()));
+            }
         }
 
-        if (StringUtils.isNotBlank(model)) {
-            log.debug("searching by model: {}", model);
-            devices.addAll(deviceRepository.findByBrandIgnoreCase(model.trim()));
-        }
-
-        if (!devices.isEmpty()) {
-            result.addAll(devices);
-        }
-
-        return result;
+        return devices;
     }
 
     @Override

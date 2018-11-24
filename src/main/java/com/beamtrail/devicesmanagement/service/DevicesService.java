@@ -7,7 +7,7 @@ import com.beamtrail.devicesmanagement.pojo.GetDevicesResponse;
 
 public interface DevicesService {
 
-    GetDevicesResponse getDevices();
+    GetDevicesResponse getDevices(String isBooked, String brand, String model);
 
     Optional<GetDeviceResponse> getDevice(Long deviceId);
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beamtrail.devicesmanagement.exception.DefinedErrorException;
@@ -34,11 +35,15 @@ public class DevicesController {
     private DevicesService devicesService;
 
     @GetMapping(path = "")
-    public GetDevicesResponse getDevices() {
+    public GetDevicesResponse getDevices(
+            @RequestParam(name = "isBooked", required = false) String isBooked,
+            @RequestParam(name = "brand", required = false) String brand,
+            @RequestParam(name = "model", required = false) String model) {
 
-        log.info("received request to get devices");
+        log.info("received request to get devices - isBooked: {} - brand: {} - model: {}", isBooked,
+                brand, model);
 
-        return devicesService.getDevices();
+        return devicesService.getDevices(isBooked, brand, model);
     }
 
     @GetMapping(path = "/{device_id}")
